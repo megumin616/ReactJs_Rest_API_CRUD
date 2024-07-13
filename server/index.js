@@ -28,14 +28,17 @@ app.get('/', (req, res) => {
         db.query('SELECT * FROM users', (err, results) => {
             if (err) {
                 console.log("Error", err)
-                return res.status(400).send();
+                // return res.status(400).send();
+                return res.status(400).json({message: "Error geting data"})
             } else {
-                return res.status(200).send(results);
+                // return res.status(200).send(results);
+                return res.status(200).json({message: "Get data succlessfully", results})
             }
         });
     } catch (err) {
         console.log(err);
-        return res.status(500).send();
+        // return res.status(500).send();
+        return res.status(500).json({message: "Server error", error: err})
     }
 });
 
