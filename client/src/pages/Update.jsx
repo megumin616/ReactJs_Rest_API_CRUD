@@ -9,34 +9,78 @@ export default function Update() {
   const [userData, setUserData] = useState(null);
 
   const navigate = useNavigate();
-
   const { id } = useParams();
-  useEffect(() => {
-    axios
-      .get("http://localhost:3031/read/" + id)
-      .then((res) => {
-        const user = res.data[0]; // ข้อมูลผู้ใช้คืออาเรย์ที่ 0
-        setUserData(user);
-        setName(user.name);
-        setPhone(user.phone);
-        setAddress(user.address);
-      })
-      .catch((err) => console.log(err));
-  }, [id]);
 
-  console.log('data', name,phone,address)
+  /* Asios */
+
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:3031/read/" + id)
+  //     .then((res) => {
+  //       const user = res.data[0]; // ข้อมูลผู้ใช้คืออาเรย์ที่ 0
+  //       setUserData(user);
+  //       setName(user.name);
+  //       setPhone(user.phone);
+  //       setAddress(user.address);
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, [id]);
+
+
+  // const handleUpdate = (e) => {
+  //   e.preventDefault();
+  //   const updateUser = {
+  //       name: name,
+  //       phone: phone,
+  //       address: address
+  //   }
+
+  //   axios.put(`http://localhost:3031/update/${id}`, updateUser)
+  //   .then((res) => navigate('/'))
+  //   .catch((err) => console.log(err))
+  // }
+
+
+  /* Fetch */
+
+  useEffect(() => {
+    fetch(`http://localhost:3031/read/${id}`)
+    .then((res) => {
+      if(!res.ok) {
+        throw new Error("Error response was not ok");
+      } return res.json();
+    })
+    .then((data) => {
+      const user = data.results[0];
+      setUserData(user)
+      setName(user.name)
+      setPhone(user.phone)
+      setAddress(user.address)
+    })
+    .catch((err) => {
+      console.log("there was a problem with fetch operatin", err);
+    })
+  },[id])
 
   const handleUpdate = (e) => {
     e.preventDefault();
-    const updateUser = {
+    fetch(`http://localhost:3031/update/${id}`, {
+      method: 'PUT',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
         name: name,
         phone: phone,
         address: address
-    }
-
-    axios.put(`http://localhost:3031/update/${id}`, updateUser)
-    .then((res) => navigate('/'))
-    .catch((err) => console.log(err))
+      })
+    }).then((res) => {
+      if(!res.ok) {
+        throw new Error("Error response was not ok")
+      } return navigate('/');
+    }).catch((err) => {
+      console.log("There was a problem with fetch operation", err);
+    })
   }
 
 
