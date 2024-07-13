@@ -4,6 +4,9 @@ import cors from 'cors'
 
 const app = express()
 app.use(cors())
+/*  app.use(cors()) จะเปิดใช้งาน CORS middleware ในแอป Express 
+ ซึ่งจะทำให้เซิร์ฟเวอร์สามารถรับ HTTP requests จาก origins หรือโดเมนอื่น ๆ 
+ ได้ตามที่กำหนดในการตั้งค่าของ CORS middleware นั้นๆ*/
 app.use(express.json())
 
 const db = mysql.createConnection({
